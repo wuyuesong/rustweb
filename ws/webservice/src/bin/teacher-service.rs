@@ -8,6 +8,8 @@ mod handlers;
 mod routers;
 #[path = "../state.rs"]
 mod state;
+#[path = "../models.rs"]
+mod models;
 
 use routers::*;
 use state::AppState;
@@ -17,11 +19,13 @@ async fn main() -> io::Result<()> {
     let shared_data = web::Data::new(AppState {
         health_check_response: "I'm OK.".to_string(),
         visit_count:Mutex::new(0),
+        courses: Mutex::new(vec![]),
     });  //初始化一个AppState
     let app = move || {
         App::new()
             .app_data(shared_data.clone())
             .configure(general_routes)
+            .configure(course_routes)
     };   //将share_data注册到web应用，这样就可以向handler输入数据了，然后配置路由
 
     HttpServer::new(app).bind("127.0.0.1:3000")?.run().await //创建webserver，然后把web应用传进去
