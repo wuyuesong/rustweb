@@ -8,5 +8,7 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
 pub fn course_routes(cfg: &mut web::ServiceConfig) {
     cfg
     .service(web::scope("/courses")   //用于定义作用域，换句话说就是一套资源的根路径
-    .route("/",web::post().to(new_course)));
+    .route("/",web::post().to(new_course))
+    .route("/{use_id}",web::get().to(get_courses_for_teacher))
+    .route("/{user_id}/{course_id}",web::get().to(get_course_detail)));
 }
